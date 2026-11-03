@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Leak Detection</title>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+    <script type="text/javascript"
+        id="MathJax-script"
+        async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+
+</head>
+<body>
+
+<h1>Pipeline Leak Detection</h1>
+
+<p>
+    This project explores machine-learning methods for detecting leaks
+    in pipeline networks using simulated hydraulic data. It starts with
+    a binary leak/no-leak classifier on a toy network and is being
+    extended toward larger topologies and multivariate prediction.
+</p>
+
+<h2>Project stages</h2>
+
+<h3>Stage 0 — Baseline leak detection <em>(completed)</em></h3>
+
+<p>
+    A baseline binary neural-network classifier was built to distinguish
+    between leak and no-leak cases using simulated hydraulic data.
+</p>
+
+<p>The implementation includes:</p>
+
+<ul>
+    <li>
+        <strong>A neural network built from scratch in PyTorch.</strong>
+
+        <p>Architecture Construction:</p>
+
+        \[
+        \begin{Bmatrix}
+        \vec{h}_1 = a[\beta_0 + \Omega_0 \vec{x}] \\
+
+        \vec{h}_2 = a[\beta_1 + \Omega_1 \vec{h}_1] \\
+
+        \vec{h}_3 = a[\beta_2 + \Omega_2 \vec{h}_2] \\
+
+        \vdots \qquad \vdots \qquad \vdots \\
+
+        \vec{h}_K = a[\beta_{K-1} + \Omega_{K-1}\vec{h}_{K-1}] \\
+
+        f[\vec{x}, \boldsymbol{\phi}]
+        = \beta_K + \Omega_K \vec{h}_K
+        \end{Bmatrix}
+        \]
+
+    </li>
+
+    <li>
+        <strong>He initialization:</strong>
+
+        \[
+        \sigma_\Omega^2 = \frac{4}{D_h + D_h'}
+        \]
+    </li>
+
+    <li>
+        <strong>Binary Cross-Entropy as the loss function:</strong>
+
+        \[
+        L[\boldsymbol{\phi}]
+        =
+        \sum_{i=1}^{I}
+        \left\{
+        -(1-y_i)\log
+        \left[1-\operatorname{sig}
+        [f[\vec{x}_i,\boldsymbol{\phi}]]\right]
+        -
+        y_i\log
+        \left[\operatorname{sig}
+        [f[\vec{x}_i,\boldsymbol{\phi}]]\right]
+        \right\}
+        \]
+
+        <p>where,</p>
+
+        \[
+        \operatorname{sig}[z]
+        =
+        \frac{1}{1+\exp[-z]}
+        \]
+    </li>
+
+    <li>
+        <strong>
+            A custom vanilla Gradient Descent training loop using
+            PyTorch autograd (full batch).
+        </strong>
+
+        \[
+        \vec{\phi}
+        \leftarrow
+        \vec{\phi}
+        -
+        \alpha \nabla L[\boldsymbol{\phi}]
+        \]
+    </li>
+
+    <li>
+        Input-feature standardization using training-set statistics,
+        followed by evaluation on a separate test set.
+    </li>
+
+</ul>
+
+<p>
+    The baseline notebook and toy-network data are in
+    <a href="Phase%200%20(Toy)/">Phase 0 (Toy)</a>.
+</p>
+
+<h3>Stage 1 — Larger topologies and multivariate regression
+    <em>(in progress)</em>
+</h3>
+
+<p>
+    The project is extending the baseline from a toy topology to larger,
+    more realistic pipeline networks. The problem is also moving beyond
+    binary detection toward multivariate regression for leak severity
+    and location-dependent quantities.
+</p>
+
+<p>Current and planned investigations include:</p>
+
+<ul>
+    <li>
+        Moving from Binary Classification (leak/no leak) to
+        Multivariate Regression (leak location + magnitude).
+    </li>
+
+    <li>
+        Studying model performance and hyperparameter selection across
+        experimental settings.
+    </li>
+
+    <li>
+        Examining the bias–variance tradeoff in the classical regime
+        and double descent in the overparameterized regime.
+    </li>
+
+    <li>
+        Investigating vanishing and exploding gradients and other
+        training-related failure modes.
+    </li>
+
+    <li>
+        Comparing optimizers, loss functions, and regularization
+        techniques, including custom PyTorch implementations.
+    </li>
+
+</ul>
+
+<p>
+    The Phase 1 notebook and datasets are in
+    <a href="Phase%201/">Phase 1</a>.
+    Network-topology experiments are in
+    <a href="EPANET%20Experiments/">EPANET Experiments</a>.
+</p>
+
+<h2>Future scope</h2>
+
+<ul>
+    <li>
+        Incorporate more detailed fluid-mechanics physics, including
+        flow phenomena such as turbulence.
+    </li>
+
+    <li>
+        Develop a physics-informed ML architecture with custom loss
+        terms constrained by governing fluid-mechanics differential
+        equations.
+    </li>
+
+    <li>
+        Extend the system toward real-time structural-health monitoring
+        and leak detection.
+    </li>
+
+    <li>
+        Investigate C++/CUDA implementations for computational
+        acceleration and real-time deployment.
+    </li>
+
+</ul>
+
+<h2>Repository layout</h2>
+
+<ul>
+    <li>
+        <a href="Phase%200%20(Toy)/">Phase 0 (Toy)</a>
+        — baseline binary classifier, toy-network datasets, and an
+        EPANET dataset generator.
+    </li>
+
+    <li>
+        <a href="Phase%201/">Phase 1</a>
+        — larger-network experiments, multivariate-regression notebook,
+        datasets, and an EPANET network model.
+    </li>
+
+    <li>
+        <a href="EPANET%20Experiments/">EPANET Experiments</a>
+        — exploratory notebooks for network topologies and EPANET
+        simulations.
+    </li>
+
+    <li>
+        <a href="All%20Implementations/">All Implementations</a>
+        — implementation notebooks.
+    </li>
+
+</ul>
+
+<h2>Notes</h2>
+
+<p>
+    The project is under active development. The notebooks and datasets
+    document the experiments as they evolve; planned work and future
+    scope above should not be read as completed functionality.
+</p>
+
+</body>
+</html>
