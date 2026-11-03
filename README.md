@@ -11,49 +11,31 @@ A baseline binary neural-network classifier was built to distinguish between lea
 The implementation includes:
 
 - A neural network built from scratch in PyTorch.
-
-  **Architecture Construction:**
-
-  <p align="center">
-  <strong>h</strong><sub>1</sub> = a[β<sub>0</sub> + Ω<sub>0</sub><strong>x</strong>]
-  <br><br>
-  <strong>h</strong><sub>2</sub> = a[β<sub>1</sub> + Ω<sub>1</sub><strong>h</strong><sub>1</sub>]
-  <br><br>
-  <strong>h</strong><sub>3</sub> = a[β<sub>2</sub> + Ω<sub>2</sub><strong>h</strong><sub>2</sub>]
-  <br><br>
-  ⋮ &nbsp;&nbsp;&nbsp;&nbsp; ⋮ &nbsp;&nbsp;&nbsp;&nbsp; ⋮
-  <br><br>
-  <strong>h</strong><sub>K</sub> = a[β<sub>K−1</sub> + Ω<sub>K−1</sub><strong>h</strong><sub>K−1</sub>]
-  <br><br>
-  f[<strong>x</strong>, <strong>φ</strong>] = β<sub>K</sub> + Ω<sub>K</sub><strong>h</strong><sub>K</sub>
-  </p>
-
+  Architecture Construction:
+  $$
+  \begin{Bmatrix}
+      \vec{h}_1 = a[\beta_0 + {\Omega_0 \vec{x}}] \\
+      \vec{h}_2 = a[\beta_1 + {\Omega_1 \vec{h}_1}] \\
+      \vec{h}_3 = a[\beta_2 + {\Omega_2 \vec{h}_2}] \\
+      \vdots \qquad \vdots \qquad \vdots \\
+      \vec{h}_K = a[\beta_{K-1} + {\Omega_{K-1} \vec{h}_{K-1}}] \\
+      f[\vec{x}, \bold{\phi}] = \beta_K + {\Omega_K \vec{h}_K}
+  \end{Bmatrix}
+  $$
 - He initialization:
-
-  <p align="center">
-  σ<sub>Ω</sub><sup>2</sup> = 4 / (D<sub>h</sub> + D<sub>h</sub>′)
-  </p>
-
+  $$
+  \sigma_\Omega^2 = \frac{4}{D_h + D_h'}
+  $$
 - Binary Cross-Entropy as the loss function:
-
-  <p align="center">
-  L[<strong>φ</strong>] = ∑<sub>i=1</sub><sup>I</sup> { −(1 − y<sub>i</sub>) log[1 − sig(f[<strong>x</strong><sub>i</sub>, <strong>φ</strong>])]
-  <br><br>
-  − y<sub>i</sub> log[sig(f[<strong>x</strong><sub>i</sub>, <strong>φ</strong>])] }
-  </p>
-
-  where,
-
-  <p align="center">
-  sig[z] = 1 / (1 + exp[−z])
-  </p>
-
-- A custom vanilla Gradient Descent training loop using PyTorch autograd (full batch):
-
-  <p align="center">
-  <strong>φ</strong> ← <strong>φ</strong> − α ∇L[<strong>φ</strong>]
-  </p>
-
+  $$
+  L[\bold{\phi}] = \displaystyle\sum_{i=1}^{I}{-(1-y_i) \log[1-\text{sig}[f[\vec{x}_i, \bold{\phi}]]] - y_i \log[\text{sig}[f[\vec{x}_i, \bold{\phi}]]]} \\
+  \text{where,} \qquad
+  \text{sig}[z] = \frac{1}{1+\exp[-z]}
+  $$
+- A custom vanilla Gradient Descent training loop using PyTorch autograd (full batch)
+  $$
+  \vec{\phi} \leftarrow \vec{\phi} - \alpha \nabla{L[\vec{\phi}]}
+  $$
 - Input-feature standardization using training-set statistics, followed by evaluation on a separate test set.
 
 The baseline notebook and toy-network data are in [`Phase 0 (Toy)`](<Phase 0 (Toy)>).
