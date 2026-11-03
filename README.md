@@ -14,23 +14,45 @@ The implementation includes:
 
   **Architecture Construction:**
 
-  ![Neural Network Architecture](https://render.githubusercontent.com/render/math?math=%5Cbegin%7BBmatrix%7D%5Cvec%7Bh%7D_1%3Da%5B%5Cbeta_0%2B%5COmega_0%5Cvec%7Bx%7D%5D%5C%5C%5Cvec%7Bh%7D_2%3Da%5B%5Cbeta_1%2B%5COmega_1%5Cvec%7Bh%7D_1%5D%5C%5C%5Cvec%7Bh%7D_3%3Da%5B%5Cbeta_2%2B%5COmega_2%5Cvec%7Bh%7D_2%5D%5C%5C%5Cvdots%5Cquad%5Cvdots%5Cquad%5Cvdots%5C%5C%5Cvec%7Bh%7D_K%3Da%5B%5Cbeta_%7BK-1%7D%2B%5COmega_%7BK-1%7D%5Cvec%7Bh%7D_%7BK-1%7D%5D%5C%5Cf%5B%5Cvec%7Bx%7D%2C%5Cboldsymbol%7B%5Cphi%7D%5D%3D%5Cbeta_K%2B%5COmega_K%5Cvec%7Bh%7D_K%5Cend%7BBmatrix%7D)
+  <p align="center">
+  <strong>h</strong><sub>1</sub> = a[β<sub>0</sub> + Ω<sub>0</sub><strong>x</strong>]
+  <br><br>
+  <strong>h</strong><sub>2</sub> = a[β<sub>1</sub> + Ω<sub>1</sub><strong>h</strong><sub>1</sub>]
+  <br><br>
+  <strong>h</strong><sub>3</sub> = a[β<sub>2</sub> + Ω<sub>2</sub><strong>h</strong><sub>2</sub>]
+  <br><br>
+  ⋮ &nbsp;&nbsp;&nbsp;&nbsp; ⋮ &nbsp;&nbsp;&nbsp;&nbsp; ⋮
+  <br><br>
+  <strong>h</strong><sub>K</sub> = a[β<sub>K−1</sub> + Ω<sub>K−1</sub><strong>h</strong><sub>K−1</sub>]
+  <br><br>
+  f[<strong>x</strong>, <strong>φ</strong>] = β<sub>K</sub> + Ω<sub>K</sub><strong>h</strong><sub>K</sub>
+  </p>
 
 - He initialization:
 
-  ![He Initialization](https://render.githubusercontent.com/render/math?math=%5Csigma_%5COmega%5E2%3D%5Cfrac%7B4%7D%7BD_h%2BD_h%27%7D)
+  <p align="center">
+  σ<sub>Ω</sub><sup>2</sup> = 4 / (D<sub>h</sub> + D<sub>h</sub>′)
+  </p>
 
 - Binary Cross-Entropy as the loss function:
 
-  ![Binary Cross Entropy](https://render.githubusercontent.com/render/math?math=L%5B%5Cboldsymbol%7B%5Cphi%7D%5D%3D%5Csum_%7Bi%3D1%7D%5E%7BI%7D%5Cleft%5C%7B-%281-y_i%29%5Clog%5Cleft%5B1-%5Coperatorname%7Bsig%7D%5Bf%5B%5Cvec%7Bx%7D_i%2C%5Cboldsymbol%7B%5Cphi%7D%5D%5D%5Cright%5D-y_i%5Clog%5Cleft%5B%5Coperatorname%7Bsig%7D%5Bf%5B%5Cvec%7Bx%7D_i%2C%5Cboldsymbol%7B%5Cphi%7D%5D%5D%5Cright%5D%5Cright%5C%7D)
+  <p align="center">
+  L[<strong>φ</strong>] = ∑<sub>i=1</sub><sup>I</sup> { −(1 − y<sub>i</sub>) log[1 − sig(f[<strong>x</strong><sub>i</sub>, <strong>φ</strong>])]
+  <br><br>
+  − y<sub>i</sub> log[sig(f[<strong>x</strong><sub>i</sub>, <strong>φ</strong>])] }
+  </p>
 
   where,
 
-  ![Sigmoid Function](https://render.githubusercontent.com/render/math?math=%5Coperatorname%7Bsig%7D%5Bz%5D%3D%5Cfrac%7B1%7D%7B1%2B%5Cexp%5B-z%5D%7D)
+  <p align="center">
+  sig[z] = 1 / (1 + exp[−z])
+  </p>
 
 - A custom vanilla Gradient Descent training loop using PyTorch autograd (full batch):
 
-  ![Gradient Descent Update](https://render.githubusercontent.com/render/math?math=%5Cvec%7B%5Cphi%7D%5Cleftarrow%5Cvec%7B%5Cphi%7D-%5Calpha%20%5Cnabla%20L%5B%5Cboldsymbol%7B%5Cphi%7D%5D)
+  <p align="center">
+  <strong>φ</strong> ← <strong>φ</strong> − α ∇L[<strong>φ</strong>]
+  </p>
 
 - Input-feature standardization using training-set statistics, followed by evaluation on a separate test set.
 
