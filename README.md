@@ -16,7 +16,7 @@ The project focuses on developing neural networks from scratch, studying their o
 
 # Stage 0 — Baseline Leak Detection
 
-<sub>Status: Completed</sub>
+**Status:** Completed
 
 A baseline binary neural-network classifier was developed to distinguish between leak and no-leak cases using simulated hydraulic data.
 
@@ -28,12 +28,12 @@ A fully connected neural network was constructed from scratch in PyTorch.
 
 $$
 \begin{Bmatrix}
-    \vec{h}_1 = a[\beta_0 + \Omega_0 \vec{x}] \\
-    \vec{h}_2 = a[\beta_1 + \Omega_1 \vec{h}_1] \\
-    \vec{h}_3 = a[\beta_2 + \Omega_2 \vec{h}_2] \\
-    \vdots \qquad \vdots \qquad \vdots \\
-    \vec{h}_K = a[\beta_{K-1} + \Omega_{K-1}\vec{h}_{K-1}] \\
-    f[\vec{x}, \bold{\phi}] = \beta_K + \Omega_K \vec{h}_K
+\vec{h}_1 = a[\beta_0 + \Omega_0 \vec{x}] \\
+\vec{h}_2 = a[\beta_1 + \Omega_1 \vec{h}_1] \\
+\vec{h}_3 = a[\beta_2 + \Omega_2 \vec{h}_2] \\
+\vdots \qquad \vdots \qquad \vdots \\
+\vec{h}_K = a[\beta_{K-1} + \Omega_{K-1}\vec{h}_{K-1}] \\
+f[\vec{x}, \boldsymbol{\phi}] = \beta_K + \Omega_K \vec{h}_K
 \end{Bmatrix}
 $$
 
@@ -48,25 +48,15 @@ $$
 $$
 \boxed{
 \begin{aligned}
-L[\bold{\phi}]
-={}&
-\displaystyle\sum_{i=1}^{I}
-\Big\{
--(1-y_i)
-\log\left[
-1-\text{sig}[f[\vec{x}_i,\bold{\phi}]]
+L[\boldsymbol{\phi}] ={}&
+\sum_{i=1}^{I}
+\left[
+-(1-y_i)\log\left(1-\text{sig}[f[\vec{x}_i,\boldsymbol{\phi}]]\right)
+-y_i\log\left(\text{sig}[f[\vec{x}_i,\boldsymbol{\phi}]]\right)
 \right]
 \\
-&-
-y_i
-\log\left[
-\text{sig}[f[\vec{x}_i,\bold{\phi}]]
-\right]
-\Big\}
-\\[6pt]
 \text{where,}\qquad
-\text{sig}[z]
-={}&
+\text{sig}[z] ={}&
 \frac{1}{1+\exp[-z]}
 \end{aligned}
 }
@@ -95,7 +85,7 @@ $$
 
 # Stage 1 — Larger Topologies and Multivariate Regression
 
-<sub>Status: Completed</sub>
+**Status:** Completed
 
 Stage 1 extends the baseline classifier to larger pipeline networks and reformulates the problem as multivariate prediction of leak locations and intensities.
 
@@ -122,12 +112,12 @@ The network consists of multiple fully connected layers with activation function
 
 $$
 \begin{Bmatrix}
-    \vec{h}_1 = a[\vec{\beta_0} + \Omega_0 \vec{x}] \\
-    \vec{h}_2 = a[\vec{\beta_1} + \Omega_1 \vec{h}_1] \\
-    \vec{h}_3 = a[\vec{\beta_2} + \Omega_2 \vec{h}_2] \\
-    \vdots \qquad \vdots \qquad \vdots \\
-    \vec{h}_K = a[\vec{\beta}_{K-1} + \Omega_{K-1}\vec{h}_{K-1}] \\
-    f[\vec{x}, \bold{\phi}] = \vec{\beta}_K + \Omega_K \vec{h}_K
+\vec{h}_1 = a[\vec{\beta}_0 + \Omega_0 \vec{x}] \\
+\vec{h}_2 = a[\vec{\beta}_1 + \Omega_1 \vec{h}_1] \\
+\vec{h}_3 = a[\vec{\beta}_2 + \Omega_2 \vec{h}_2] \\
+\vdots \qquad \vdots \qquad \vdots \\
+\vec{h}_K = a[\vec{\beta}_{K-1} + \Omega_{K-1}\vec{h}_{K-1}] \\
+f[\vec{x}, \boldsymbol{\phi}] = \vec{\beta}_K + \Omega_K \vec{h}_K
 \end{Bmatrix}
 $$
 
@@ -144,11 +134,7 @@ From these, we derive:
 **Leak Probability**
 
 $$
-p_{ij}
-=
-\text{sig}[z_{ij}]
-=
-\frac{1}{1+\exp[-z_{ij}]}
+p_{ij} = \text{sig}[z_{ij}] = \frac{1}{1+\exp[-z_{ij}]}
 $$
 
 **Binary Target**
@@ -184,12 +170,12 @@ L[\phi] ={}&
 \frac{1}{|\mathcal{B}_b| \cdot 1242}
 \sum_{i \in \mathcal{B}_b}
 \sum_{j=1}^{1242}
-\Big[
+\left[
 -(1-y^c_{ij})\log(1-p_{ij})
 -y^c_{ij}\log(p_{ij})
-\Big]
+\right]
 }_{\text{Binary Cross-Entropy}}
-\\[8pt]
+\\
 &+
 \beta \underbrace{
 \frac{1}{|\mathcal{B}_b| \cdot 1242}
@@ -210,7 +196,7 @@ $$
 \begin{aligned}
 L[\phi] ={}&
 \alpha L_{\text{cls}}[\phi]
-\\[6pt]
+\\
 &+
 \beta \frac{1}{|\mathcal{B}_b| \cdot 1242}
 \sum_{i \in \mathcal{B}_b}
@@ -219,8 +205,7 @@ p_{ij}
 \left[
 \frac{1}{2}v_{ij}
 +
-\frac{(y_{ij}-\mu_{ij})^2}
-{2\exp(v_{ij})}
+\frac{(y_{ij}-\mu_{ij})^2}{2\exp(v_{ij})}
 \right]
 \end{aligned}
 }
@@ -232,11 +217,7 @@ L2 regularization is added to the loss to penalize large weights, excluding bias
 
 $$
 \boxed{
-L_{L2}[\phi]
-=
-L[\phi]
-+
-\lambda \sum_l \|W_l\|_F^2
+L_{L2}[\phi] = L[\phi] + \lambda \sum_l \lVert W_l \rVert_F^2
 }
 $$
 
@@ -247,10 +228,7 @@ Five custom optimizers were implemented using raw PyTorch autograd.
 Let
 
 $$
-g_t
-=
-\displaystyle\sum_{i\in\mathcal{B}_t}
-{\nabla_{\mathbf{\phi}}l_i[\mathbf{\phi_t}]}
+g_t = \sum_{i\in\mathcal{B}_t} \nabla_{\mathbf{\phi}}l_i[\mathbf{\phi}_t]
 $$
 
 be the gradient of the batch loss.
@@ -262,12 +240,12 @@ $$
 \phi_{t+1}
 \leftarrow
 \phi_t-\alpha
-\displaystyle\sum_{i=1}^{I}
-{\nabla_{\mathbf{\phi}}l_i[\mathbf{\phi_t}]}
+\sum_{i=1}^{I}
+\nabla_{\mathbf{\phi}}l_i[\mathbf{\phi}_t]
 }
 $$
 
-Here, $\mathcal{B}_t$ is the full batch.
+Here, $\mathcal{B}_t$ represents the full batch.
 
 ### 3.2 Stochastic Gradient Descent (SGD)
 
@@ -279,7 +257,7 @@ $$
 }
 $$
 
-Here, $\mathcal{B}_t$ is a mini-batch.
+Here, $\mathcal{B}_t$ represents a mini-batch.
 
 ### 3.3 SGD with Momentum
 
@@ -289,7 +267,7 @@ $$
 \mathbf{m}_{t+1}
 &\leftarrow
 \beta\mathbf{m}_t+(1-\beta)g_t
-\\[6pt]
+\\
 \phi_{t+1}
 &\leftarrow
 \phi_t-\alpha\mathbf{m}_{t+1}
@@ -305,12 +283,10 @@ $$
 \mathbf{v}_{t+1}
 &\leftarrow
 \rho\mathbf{v}_t+(1-\rho)g_t^2
-\\[6pt]
+\\
 \phi_{t+1}
 &\leftarrow
-\phi_t-
-\alpha
-\frac{g_t}{\sqrt{\mathbf{v}_{t+1}}+\epsilon}
+\phi_t-\alpha\frac{g_t}{\sqrt{\mathbf{v}_{t+1}}+\epsilon}
 \end{aligned}
 }
 $$
@@ -323,25 +299,24 @@ $$
 \mathbf{m}_{t+1}
 &\leftarrow
 \beta\mathbf{m}_t+(1-\beta)g_t
-\\[6pt]
+\\
 \mathbf{v}_{t+1}
 &\leftarrow
 \gamma\mathbf{v}_t+(1-\gamma)g_t^2
-\\[8pt]
+\\
 \hat{\mathbf{m}}_{t+1}
 &=
-\frac{\mathbf{m}_{t+1}}{1-\beta^{t+1}},
-\qquad
+\frac{\mathbf{m}_{t+1}}{1-\beta^{t+1}}
+\\
 \hat{\mathbf{v}}_{t+1}
-=
+&=
 \frac{\mathbf{v}_{t+1}}{1-\gamma^{t+1}}
-\\[8pt]
+\\
 \phi_{t+1}
 &\leftarrow
 \phi_t-
 \alpha
-\frac{\hat{\mathbf{m}}_{t+1}}
-{\sqrt{\hat{\mathbf{v}}_{t+1}}+\epsilon}
+\frac{\hat{\mathbf{m}}_{t+1}}{\sqrt{\hat{\mathbf{v}}_{t+1}}+\epsilon}
 \end{aligned}
 }
 $$
@@ -396,8 +371,7 @@ The learning rate for heteroscedastic configurations was reduced to `0.0001` to 
 The heteroscedastic regression loss
 
 $$
-L_{\text{het}}[\phi]
-=
+L_{\text{het}}[\phi] =
 \sum_i
 \left[
 \frac{1}{2}\log(\sigma_i^2)
@@ -411,10 +385,7 @@ introduces a variance-dependent gradient scaling through $1/\sigma_i^2$. In our 
 Empirically, the standard least-squares loss
 
 $$
-L[\phi]
-=
-\sum_i
-\left(y_i-f[\mathbf{x}_i,\phi]\right)^2
+L[\phi] = \sum_i \left(y_i-f[\mathbf{x}_i,\phi]\right)^2
 $$
 
 proved substantially more effective and stable.
@@ -428,7 +399,7 @@ The following investigations, initially outlined during the development of the p
 - **Optimizer Comparison:** Comparing Vanilla Gradient Descent, SGD, SGD with Momentum, RMSprop, and Adam.
 - **Loss Function Comparison:** Investigating homoscedastic and heteroscedastic regression objectives.
 - **Regularization:** Comparing models with and without L2 regularization.
-- **Custom Implementations:** Implementing the optimizer update rules and loss functions using PyTorch autograd rather than relying on built-in optimizer classes.
+- **Custom Implementations:** Implementing optimizer update rules and loss functions using PyTorch autograd rather than relying on built-in optimizer classes.
 
 **Implementation and Data:**
 
@@ -439,11 +410,11 @@ The following investigations, initially outlined during the development of the p
 
 # Stage 2 — Model Capacity, Generalization and Optimization Dynamics
 
-<sub>Status: Planned</sub>
+**Status:** Planned
 
 Stage 2 will investigate the relationship between neural-network capacity, generalization, and optimization dynamics. The objective is to move beyond comparing fixed architectures and study how the underlying properties of neural networks evolve as their capacity increases.
 
-### 1. Bias–Variance Trade-off and Double Descent
+## 1. Bias–Variance Trade-off and Double Descent
 
 Investigate the effect of model capacity on training and test error by training the network across a series of model sizes.
 
@@ -460,7 +431,7 @@ $$
 
 The objective is to construct a model-capacity versus error plot, distinguishing the classical and modern regimes.
 
-### 2. Continuous-Time Gradient Descent and Implicit Regularization
+## 2. Continuous-Time Gradient Descent and Implicit Regularization
 
 Investigate the optimization trajectory of neural networks by comparing continuous-time gradient flow with actual discrete Gradient Descent updates.
 
@@ -473,9 +444,7 @@ Investigate the optimization trajectory of neural networks by comparing continuo
 The continuous-time gradient flow is described by:
 
 $$
-\frac{d\phi(t)}{dt}
-=
--\nabla_\phi L[\phi(t)]
+\frac{d\phi(t)}{dt} = -\nabla_\phi L[\phi(t)]
 $$
 
 The corresponding discrete Gradient Descent update is:
@@ -490,7 +459,7 @@ $$
 
 The objective is to understand how the optimization trajectory itself influences the solution obtained, beyond the effect of explicitly introduced regularization terms.
 
-### 3. Vanishing and Exploding Gradient Analysis
+## 3. Vanishing and Exploding Gradient Analysis
 
 Investigate the propagation of gradients through the network and characterize how gradient magnitudes evolve with model capacity.
 
@@ -500,7 +469,7 @@ Investigate the propagation of gradients through the network and characterize ho
 - Compare gradient behaviour across different model capacities and training configurations.
 - Relate gradient propagation to training stability and generalization behaviour.
 
-### Summary of Planned Investigations
+## Summary of Planned Investigations
 
 Current Phase 2 investigations include:
 
