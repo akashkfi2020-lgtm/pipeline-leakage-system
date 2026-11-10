@@ -1,0 +1,38 @@
+{
+  "n_rows": 11952,
+  "n_train_rows": 9562,
+  "hours": 24,
+  "n_leak_scenarios": 373,
+  "leak_groups_complete": true,
+  "calibration": [
+    {
+      "exact_stage1": 0.8342245989304813,
+      "exact_final": 0.9037433155080213,
+      "ari_final": 0.9788304932489096
+    },
+    {
+      "exact_stage1": 0.7956989247311828,
+      "exact_final": 0.8978494623655914,
+      "ari_final": 0.9819860182763409
+    }
+  ],
+  "checks": {
+    "every leak scenario is complete (exactly 24 rows, one per hour) -> pooled data are complete": true,
+    "zero-leak rows are spread evenly over the hours (whole scenarios)": true,
+    ">= 5 scenario-signature columns exist (ICC >= 0.5)": true,
+    "calibration: held-out leak scenarios (labels hidden) recovered exactly >= 99%": false,
+    "self-training converged to a stable partition (ARI >= 0.9999)": false,
+    "ambiguous zero-leak assignments <= 0.5%": false
+  },
+  "reliable": false,
+  "policy": "drop",
+  "n_zero_rows": 3000,
+  "n_rows_saved": 8952,
+  "ambiguous_fraction": 0.36866666666666664,
+  "self_training_ari": [
+    0.8564059918965249,
+    0.8740485429328346,
+    0.8693750194795076,
+    0.9305689671965093
+  ]
+}
